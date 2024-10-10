@@ -228,6 +228,17 @@ pub fn columns_to_iter_recursive(
                 let array = create_list(field.dtype().clone(), &mut nested, array);
                 (nested, array)
             },
+            ArrowDataType::FixedSizeBinary(size) => {
+                init.push(InitNested::Primitive(field.is_nullable));
+                PageNestedDecoder::new(
+                    columns.pop().unwrap(),
+                    ArrowDataType::FixedSizeBinary(*size),
+                    fixed_size_binary::BinaryDecoder { size: *size },
+                    init,
+                )?
+                .collect_n(filter)
+                .map(|(s, a)| (s, Box::new(a) as Box<_>))?
+            },
             ArrowDataType::Decimal(_, _) => {
                 init.push(InitNested::Primitive(field.is_nullable));
                 let type_ = types.pop().unwrap();
