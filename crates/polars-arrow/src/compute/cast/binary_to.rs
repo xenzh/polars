@@ -179,6 +179,10 @@ pub fn fixed_size_binary_binary<O: Offset>(
 pub fn fixed_size_binary_to_binview(from: &FixedSizeBinaryArray) -> BinaryViewArray {
     let datatype = <[u8] as ViewType>::DATA_TYPE;
 
+    if from.len() == 0 {
+        return BinaryViewArray::new_empty(datatype);
+    }
+
     // Fast path: all the views are inlineable
     if from.size() <= View::MAX_INLINE_SIZE as usize {
         // @NOTE: There is something with the code-generation of `View::new_inline_unchecked` that
