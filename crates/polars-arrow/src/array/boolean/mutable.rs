@@ -216,7 +216,7 @@ impl MutableBooleanArray {
                 if let Some(validity) = self.validity.as_mut() {
                     validity.extend_constant(additional, false)
                 } else {
-                    self.init_validity();
+                    self.validity = Some(MutableBitmap::with_capacity(self.values.capacity()));
                     self.validity
                         .as_mut()
                         .unwrap()

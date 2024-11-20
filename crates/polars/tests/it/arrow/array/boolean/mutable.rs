@@ -175,3 +175,15 @@ fn extend_from_self() {
         MutableBooleanArray::from([Some(true), None, Some(true), None])
     );
 }
+
+#[test]
+fn extend_constant_with_none_validity() {
+    let mut a = MutableBooleanArray::new();
+
+    a.extend_constant(2, None);
+
+    assert_eq!(
+        a.len(),
+        a.validity().map(|va| va.len()).unwrap_or(0)
+    );
+}
